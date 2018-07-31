@@ -19,7 +19,7 @@ export type Props = {
   flat: boolean,
   disabled: boolean,
   active?: boolean,
-  onClick: (event: SyntheticMouseEvent<>) => mixed
+  onBtnClick: (event: SyntheticMouseEvent<>) => mixed
 };
 
 class IconButton extends PureComponent<Props> {
@@ -50,8 +50,19 @@ class IconButton extends PureComponent<Props> {
     return <Icon glyph={glyph} className={styles.icon} size={size} />;
   }
 
+  setButton = (element: *): void => {
+    this.button = element
+  }
+
+  handleClick = (event: $FlowIssue): void => {
+    if (this.button) {
+      this.button.blur();
+    }
+    this.props.onClick(event);
+  }
+
   render() {
-    const { className, theme, size, disabled, id, flat, style, active, ...otherProps } = this.props;
+    const { className, theme, size, disabled, id, flat, style, active, onClick, ...otherProps } = this.props;
 
     const buttonClassName = classNames(
       styles.container,
@@ -73,7 +84,8 @@ class IconButton extends PureComponent<Props> {
         type="button"
         disabled={disabled}
         style={style}
-        onClick={this.props.onClick}
+        onClick={this.handleClick}
+        ref={this.setButton}
         {...otherProps}
       >
         <span className={styles.fix}>
